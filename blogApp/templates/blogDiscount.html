@@ -1,0 +1,23 @@
+{% extends 'index.html' %} {% load static %} {% block title %}Blog - Heallth
+Medical Clinic{% endblock %} {% block content %} {% load i18n %}
+<link rel="stylesheet" href="{% static 'blog.css' %}" />
+<div class="container mt-5">
+  <div class="card mb-4 shadow-sm border-0">
+    <img
+      src="{{ discount.image.url }}"
+      class="card-img-top rounded-top"
+      alt="{{ discount.title }}"
+    />
+    <div class="card-body">
+      <h3 class="card-title">{{ discount.title|safe }}</h3>
+      <p class="card-text text-muted">{{ discount.content|safe }}</p>
+    </div>
+    <div class="card-footer bg-white text-muted small">
+      <span><strong>{% trans "Nga:" %}</strong> {{ discount.from_date|date:"F j, Y" }}</span>
+      <span style="float: right"
+        ><strong>{% trans "Deri në:" %}</strong> {{ discount.to_date|date:"F j, Y" }}</span
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}

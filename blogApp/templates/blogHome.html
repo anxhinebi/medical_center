@@ -1,0 +1,153 @@
+{% extends 'index.html' %} {% load static %} {% block title %}Blog - Heallth
+Medical Clinic{% endblock %} {% block content %} {% load i18n %}
+<link rel="stylesheet" href="{% static 'blog.css' %}" />
+<div class="container blogContainer mt-5">
+  <h5 class="blog-title text-center">{% trans "Mirë se vini në HEALLTH Medical Blog" %}</h5>
+  <div class="blogPosts">
+    {% for item in news %}
+    <div class="card mb-4 shadow-sm border-0">
+      <img
+        src="{{ item.image.url }}"
+        class="card-img-top rounded-top"
+        alt="{{ item.title }}"
+      />
+      <div class="card-body">
+        <h3 class="card-title">{{ item.title|safe }}</h3>
+        <p class="card-text text-muted">
+          {{ item.content|truncatewords:30|safe }}
+        </p>
+        <a href="{% url 'blog_post' item.pk %}" class="btn btn-outline-primary"
+          >📖 {% trans "Lexo më shumë" %}</a
+        >
+      </div>
+      <div class="card-footer bg-white text-muted small">
+        <span>✍ {% trans "Shkruar nga" %} {{ item.writer }}</span>
+        <span style="float: right"
+          >📅 {% trans "Postuar në" %} {{ item.created_at|date:"F j, Y" }}</span
+        >
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-muted text-center">No blog posts available.</p>
+    {% endfor %}
+    <nav>
+      <ul class="pagination justify-content-center">
+        {% if news.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page=1">&laquo; {% trans "E Para" %}</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ news.previous_page_number }}"
+            >{% trans "Para" %}</a
+          >
+        </li>
+        {% endif %}
+        <li class="page-item disabled">
+          <span class="page-link"
+            >{% trans "Faqja" %} {{ news.number }} of {{ news.paginator.num_pages }}</span
+          >
+        </li>
+
+        {% if news.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ news.next_page_number }}">{% trans "Pas" %}</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ news.paginator.num_pages }}"
+            >{% trans "E Fundit" %} &raquo;</a
+          >
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+  <div class="sideBar">
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4 class="card-title">🔍 {% trans "Kërko" %}</h4>
+        <form method="GET" action="{% url 'blog_search' %}">
+          <input
+            type="text"
+            name="q"
+            class="form-control"
+            placeholder="Search posts..."
+          />
+          <button type="submit" class="btn btn-outline-primary mt-2">
+            {% trans "Kërko" %}
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h2 class="card-title">{% trans "Oferta" %}</h2>
+        {% for discount in discounts %}
+        <div class="mb-3">
+          <img
+            src="{{ discount.image.url }}"
+            class="img-fluid"
+            alt="{{ discount.title }}"
+          />
+          <h5>{{ discount.title|safe }}</h5>
+          <p>{{ discount.content|truncatewords:15|safe }}</p>
+          <p>
+            <strong>{% trans "Nga:" %}</strong> {{ discount.from_date|date:"F j, Y" }}
+            <strong>{% trans "Deri në:" %}</strong> {{ discount.to_date|date:"F j, Y" }}
+          </p>
+          <a
+            href="{% url 'blog_discount' discount.pk %}"
+            class="btn btn-outline-primary"
+            >📖 {% trans "Lexo më shumë" %}</a
+          >
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4 class="card-title">✍ {% trans "Shkrimtarët e Kolonës" %}</h4>
+        <ul class="list-unstyled">
+          {% for writer in writers %}
+          <li class="mb-2">🖊 {{ writer }}</li>
+          {% empty %}
+          <p class="text-muted">No writers available.</p>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4 class="card-title">📰 {% trans "Postimet e Fundit" %}</h4>
+        <ul class="list-unstyled">
+          {% for post in recent_posts %}
+          <li class="mb-2">
+            <a href="{% url 'blog_post' post.pk %}" class="text-decoration-none"
+              >📌 {{ post.title }}</a
+            >
+          </li>
+          {% empty %}
+          <p class="text-muted">No recent posts available.</p>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title">{% trans "Mundësi Punësimi" %}</h2>
+        {% for job in jobs %}
+        <div class="mb-3">
+          <h5>{{ job.title|safe }}</h5>
+          <p>{{ job.content|truncatewords:15|safe }}</p>
+          <a
+            href="{% url 'blog_job' job.pk %}"
+            class="btn btn-outline-primary"
+            >📖 {% trans "Lexo më shumë" %}</a
+          >
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</div>
+{% endblock %}

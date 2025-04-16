@@ -1,0 +1,27 @@
+{% extends 'index.html' %} {% load static %} {% block title %}Blog - Heallth
+Medical Clinic{% endblock %} {% block content %} {% load i18n %}
+<link rel="stylesheet" href="{% static 'blog.css' %}" />
+<div class="container mt-5">
+  <h2 class="text-center">{% trans "Rezultatet e Kërkimit Për" %} "{{ query }}"</h2>
+  {% if results %} {% for post in results %}
+  <div class="card mb-4 shadow-sm border-0">
+    <img
+      src="{{ post.image.url }}"
+      class="card-img-top rounded-top"
+      alt="{{ post.title }}"
+    />
+    <div class="card-body">
+      <h3 class="card-title">{{ post.title|safe }}</h3>
+      <p class="card-text text-muted">
+        {{ post.content|truncatewords:30|safe }}
+      </p>
+      <a href="{% url 'blog_post' post.pk %}" class="btn btn-outline-primary"
+        >📖 {% trans "Lexo më shumë" %}</a
+      >
+    </div>
+  </div>
+  {% endfor %} {% else %}
+  <p class="text-muted text-center">No results found.</p>
+  {% endif %}
+</div>
+{% endblock %}
